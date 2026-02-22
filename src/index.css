@@ -1,47 +1,64 @@
 @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap");
 @import "tailwindcss";
 
+/* ===== THEME TOKENS (Vercel Dark) ===== */
 :root {
-  /* ===== BACKGROUND ===== */
-  --bg: #121212;
-  /* default */
-  --surface: #121212;
-  /* paper */
-  --bg-lightL: rgba(255, 255, 255, 0.7);
+  /* ===== SURFACES (neutral charcoal scale) ===== */
+  --bg: #0f0f10;
+  /* app background */
+  --surface: #151517;
+  /* panels */
+  --surface-elev: #1c1c1f;
+  /* hover / cards */
 
-  /* ===== TEXT ===== */
-  --text: #ffffff;
-  /* primary */
-  --text-secondary: rgba(255, 255, 255, 0.7);
-  --text-disabled: rgba(255, 255, 255, 0.5);
+  /* ===== TEXT (warm-neutral grays) ===== */
+  --text: #f1f1f1;
+  --text-secondary: #b4b4b8;
+  --text-disabled: #7a7a80;
 
-  /* ===== ACTION ===== */
-  --action-active: #ffffff;
-  --action-hover: rgba(255, 255, 255, 0.08);
-  --action-selected: rgba(255, 255, 255, 0.16);
-  --action-disabled: rgba(255, 255, 255, 0.3);
-  --action-disabled-bg: rgba(255, 255, 255, 0.12);
+  /* ===== ACCENT (clean but not neon) ===== */
+  --accent: #d4d4d8;
+  /* light silver */
+  /* you can swap later */
+  --accent-soft: rgba(59, 130, 246, 0.14);
+
+  /* ===== INTERACTION ===== */
+  --hover: #2a2a2a65;
+  --selected: rgba(255, 255, 255, 0.08);
 
   /* ===== DIVIDER ===== */
-  --divider: rgba(255, 255, 255, 0.12);
+  --divider: rgba(61, 61, 61, 0.749);
 }
 
-/* ===== GLOBAL BASE ===== */
-body {
-  font-family: "Poppins", sans-serif;
-  background-color: var(--bg);
-  color: var(--text);
+/* ===== BASE ===== */
+@layer base {
+  body {
+    font-family: "Poppins";
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
 }
 
+/* ===== UTILITIES ===== */
 @layer utilities {
 
-  /* backgrounds */
+  /* surfaces */
   .bg-bg {
-    background-color: var(--bg);
+    background: var(--bg);
+  }
+
+  .border-border {
+    border-color: #323232
   }
 
   .bg-surface {
-    background-color: var(--surface);
+    background: var(--surface);
+  }
+
+  .bg-surface-elev {
+    background: var(--surface-elev);
   }
 
   /* text */
@@ -57,67 +74,74 @@ body {
     color: var(--text-disabled);
   }
 
-  /* borders / divider */
+  /* divider */
   .border-divider {
     border-color: var(--divider);
   }
 
-  /* action states */
-  .bg-hover {
-    background-color: var(--action-hover);
+  /* accent */
+  .bg-accent {
+    background: var(--accent);
+  }
+
+  .text-accent {
+    color: var(--accent);
+  }
+
+  /* interaction (neutral like Vercel) */
+  .hover:bg-hover {
+    background: var(--hover);
+  }
+
+  .hover\:bg-hover:hover {
+    background: var(--hover);
   }
 
   .bg-selected {
-    background-color: var(--action-selected);
+    background: var(--selected);
   }
 
-  .bg-disabled {
-    background-color: var(--action-disabled-bg);
-  }
-
-  .text-active {
-    color: var(--action-active);
-  }
-
-  .text-action-disabled {
-    color: var(--action-disabled);
-  }
-
-  .glass-strong {
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(16px);
-    border: 1px solid var(--divider);
-  }
-
+  /* cards (Vercel panels) */
   .glass {
-    position: relative;
-    overflow: hidden;
-    background: rgba(255, 255, 255, 0.04);
-    backdrop-filter: blur(12px);
+    background: var(--surface);
     border: 1px solid var(--divider);
-    transition: transform 220ms ease, box-shadow 220ms ease;
+    border-radius: 14px;
+    transition: background 150ms ease, border-color 150ms ease, transform 150ms ease;
   }
 
   .glass:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    background: var(--surface-elev);
+    border-color: rgba(255, 255, 255, 0.14);
+    transform: translateY(-1px);
   }
+}
 
-  .glass::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(120deg,
-        transparent 0%,
-        rgba(255, 255, 255, 0.06) 35%,
-        rgba(255, 255, 255, 0.12) 50%,
-        rgba(255, 255, 255, 0.06) 65%,
-        transparent 100%);
-    transform: translateX(-120%);
-    transition: transform 1.1s ease;
-  }
+/* ===== Global Scrollbar ===== */
 
-  .glass:hover::before {
-    transform: translateX(120%);
-  }
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--divider) transparent;
+}
+
+/* WebKit (Chrome, Edge, Safari) */
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--divider);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  /* creates padding effect */
+  background-clip: content-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.18);
 }
