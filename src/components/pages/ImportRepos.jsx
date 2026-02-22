@@ -1,9 +1,17 @@
 import { useState } from "react";
 import { Github } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 
 export default function ImportReposPage() {
   const navigate = useNavigate();
+  const [user, setUser] = useState();
+  
+  const fetchUser = () => {
+    try{
+      const user = axios.get(`/api/repos`)
+    }
+  }
 
   const repos = [
     { id: 1, name: "web-app", private: true },
