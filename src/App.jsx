@@ -4,7 +4,7 @@ import AppLayout from "./components/layout/AppLayout";
 import { Dashboard } from "./components/pages/Dashboard";
 import {PullRequestsPage } from "./components/pages/PullRequests";
 import { RepositoriesPage } from "./components/pages/Repository";
-import PRDetails from "./components/pages/PrDetails";
+import PRDetails from "./components/pages/PRDetails";
 import LoginPage from "./components/pages/Login";
 import ImportReposPage from "./components/pages/ImportRepos";
 
