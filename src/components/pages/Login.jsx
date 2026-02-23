@@ -12,10 +12,7 @@ export default function LoginPage() {
   const handleConnect = () => {
     try {
       setLoading(true);
-      window.location.href = `${serverEndpoint}/auth/github`;
-      if (res.status === 200) {
-        navigate("/import-repos");
-      }
+      window.location.href = `${serverEndpoint}/api/auth/github`;
     } catch (error) {
       console.log(error);
     } finally {
