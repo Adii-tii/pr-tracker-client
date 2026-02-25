@@ -1,22 +1,41 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import { Github } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+
+const serverEndpoint = import.meta.env.VITE_SERVER_ENDPOINT;
 
 export default function ImportReposPage() {
   const navigate = useNavigate();
 
-  const repos = [
-    { id: 1, name: "web-app", private: true },
-    { id: 2, name: "api-server", private: true },
-    { id: 3, name: "backend", private: false },
-    { id: 4, name: "infra", private: true },
-  ];
-
+  const [repos, setRepos] = useState([]);
   const [selected, setSelected] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const getRepos = async () => {
+    try {
+      const res = await axios.get(
+        `${serverEndpoint}/api/repos`,
+        { withCredentials: true }
+      );
+
+      setRepos(res.data || []);
+    } catch (error) {
+      console.error("Fetch repos failed", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getRepos();
+  }, []);
 
   const toggle = (id) => {
-    setSelected((s) =>
-      s.includes(id) ? s.filter((x) => x !== id) : [...s, id]
+    setSelected((prev) =>
+      prev.includes(id)
+        ? prev.filter((x) => x !== id)
+        : [...prev, id]
     );
   };
 
@@ -24,32 +43,47 @@ export default function ImportReposPage() {
     if (selected.length === repos.length) {
       setSelected([]);
     } else {
-      setSelected(repos.map((r) => r.id));
+      setSelected(repos.map((r) => r.githubRepoId));
     }
   };
 
-  const handleImport = () => {
-    // later → call backend to store repo access
-    navigate("/dashboard");
+  const handleImport = async () => {
+    try {
+      await axios.post(
+        `${serverEndpoint}/api/repos/import`,
+        { repoIds: selected },
+        { withCredentials: true }
+      );
+      navigate("/dashboard");
+    } catch (err) {
+      console.error("Import failed", err);
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Loading repositories...
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-bg flex items-center justify-center px-6">
       <div className="w-full max-w-xl space-y-6">
-        {/* Header */}
+
         <div className="space-y-2 text-center">
           <div className="flex items-center justify-center gap-2 text-primary font-semibold">
             <Github className="h-5 w-5" />
-            Connected as rajja
+            Connected repositories
           </div>
           <p className="text-sm text-secondary">
             Select repositories to import into PR Tracker
           </p>
         </div>
 
-        {/* Card */}
         <div className="rounded-2xl border border-divider bg-surface p-5 space-y-4">
-          {/* Select all */}
+
           <div className="flex items-center justify-between">
             <button
               onClick={toggleAll}
@@ -65,19 +99,17 @@ export default function ImportReposPage() {
             </div>
           </div>
 
-          {/* Repo list */}
           <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
             {repos.map((repo) => (
               <RepoRow
-                key={repo.id}
+                key={repo.githubRepoId}
                 repo={repo}
-                checked={selected.includes(repo.id)}
-                onToggle={() => toggle(repo.id)}
+                checked={selected.includes(repo.githubRepoId)}
+                onToggle={() => toggle(repo.githubRepoId)}
               />
             ))}
           </div>
 
-          {/* Actions */}
           <div className="flex gap-3 pt-2">
             <button
               onClick={handleImport}
@@ -94,6 +126,7 @@ export default function ImportReposPage() {
               Skip
             </button>
           </div>
+
         </div>
       </div>
     </div>

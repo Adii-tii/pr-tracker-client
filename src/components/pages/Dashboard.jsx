@@ -9,39 +9,34 @@ import ImportReposPage from "./ImportRepos";
 const serverEndpoint = import.meta.env.VITE_SERVER_ENDPOINT;
 
 export function Dashboard() {
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [needsImport, setNeedsImport] = useState(false);
-  console.log("here");
+
+  const fetchUser = async () => {
+    try {
+      const res = await axios.get(
+        `${serverEndpoint}/api/db/users/me`,
+        { withCredentials: true }
+      );
+
+      const userData = res.data.data;
+      console.log("res is : ", res);
+
+      setUser(userData);
+      setNeedsImport(!userData.repositories?.length);
+    } catch (error) {
+      console.error("User fetch failed", error);
+      setNeedsImport(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
 
   useEffect(() => {
-    const checkUserRepos = async () => {
-      try {
-        const userId = localStorage.getItem("userId"); 
-        console.log(userId);
-
-        const res = await axios.get(
-          `${serverEndpoint}/api/db/users/${userId}`,
-          { withCredentials: true }
-        );
-
-        const user = res.data.data;
-        console.log(user);
-
-        if (!user.repositories || user.repositories.length === 0) {
-          setNeedsImport(true);
-        } else {
-          setNeedsImport(false);
-        }
-      } catch (err) {
-        console.error("User fetch failed", err);
-        setNeedsImport(true);
-      } finally {
-        setLoading(false);
-        console.log("done");
-      }
-    };
-
-    checkUserRepos();
+    fetchUser();
   }, []);
 
   if (loading) {
@@ -58,11 +53,10 @@ export function Dashboard() {
 
   return (
     <div className="space-y-6 pt-6">
-      <StatsGrid />
-
+      <StatsGrid user={user} />
       <div className="grid grid-cols-2 gap-4">
-        <PROverview />
-        <RecentPRs />
+        <PROverview user={user} />
+        <RecentPRs user={user} />
       </div>
     </div>
   );
