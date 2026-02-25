@@ -16,9 +16,8 @@ export function Sidebar() {
 
   return (
     <aside
-      className={`flex h-screen flex-col border-r border-divider bg-surface transition-all duration-300 ${
-        collapsed ? "w-16" : "w-64"
-      }`}
+      className={`flex h-screen flex-col border-r border-divider bg-surface transition-all duration-300 ${collapsed ? "w-16" : "w-64"
+        }`}
     >
       {/* Top */}
       <div className="flex items-center border-b h-14 border-divider px-3 py-3">
@@ -26,9 +25,8 @@ export function Sidebar() {
         <div className="flex flex-1 items-center gap-2 overflow-hidden">
           <div className="w-5 shrink-0" />
           <button
-            className={`flex items-center gap-2 text-sm font-medium text-primary transition-opacity duration-200 ${
-              collapsed ? "opacity-0" : "opacity-100"
-            }`}
+            className={`flex items-center gap-2 text-sm font-medium text-primary transition-opacity duration-200 ${collapsed ? "opacity-0" : "opacity-100"
+              }`}
           >
             <span className="truncate">my-repo</span>
             <ChevronDown className="h-4 w-4 text-secondary" />
@@ -51,8 +49,8 @@ export function Sidebar() {
       {/* Nav */}
       <nav className="flex-1 space-y-1 px-2 py-3 text-sm">
         <SidebarItem icon={LayoutDashboard} label="Dashboard" active collapsed={collapsed} path={"/dashboard"} />
-        <SidebarItem icon={GitPullRequest} label="Pull Requests" collapsed={collapsed} path={"/pull-requests"}/>
-        <SidebarItem icon={FolderGit2} label="Repositories" collapsed={collapsed} path={"/repos"}/>
+        <SidebarItem icon={GitPullRequest} label="Pull Requests" collapsed={collapsed} path={"/pull-requests"} />
+        <SidebarItem icon={FolderGit2} label="Repositories" collapsed={collapsed} path={"/repos"} />
         <SidebarItem icon={Activity} label="Activity" collapsed={collapsed} />
       </nav>
 
@@ -63,9 +61,8 @@ export function Sidebar() {
             <div className="h-7 w-7 rounded-full bg-surface-elev shrink-0" />
 
             <div
-              className={`transition-opacity duration-200 ${
-                collapsed ? "opacity-0" : "opacity-100"
-              }`}
+              className={`transition-opacity duration-200 ${collapsed ? "opacity-0" : "opacity-100"
+                }`}
             >
               <div className="text-sm leading-tight">
                 <div className="text-primary">Rajja</div>
@@ -93,11 +90,10 @@ function SidebarItem({ icon: Icon, label, collapsed, path }) {
     <Link
       to={path}
       title={collapsed ? label : ""}
-      className={`flex w-full items-center rounded-lg px-3 py-2 transition-colors ${
-        active
+      className={`flex w-full items-center rounded-lg px-3 py-2 transition-colors ${active
           ? "bg-selected text-primary"
           : "text-secondary hover:bg-hover hover:text-primary"
-      }`}
+        }`}
     >
       {/* Fixed icon slot */}
       <div className="w-5 shrink-0 flex items-center justify-center">
@@ -106,9 +102,8 @@ function SidebarItem({ icon: Icon, label, collapsed, path }) {
 
       {/* Fading label */}
       <span
-        className={`ml-2 whitespace-nowrap transition-opacity duration-200 ${
-          collapsed ? "opacity-0" : "opacity-100"
-        }`}
+        className={`ml-2 whitespace-nowrap transition-opacity duration-200 ${collapsed ? "opacity-0" : "opacity-100"
+          }`}
       >
         {label}
       </span>

@@ -16,7 +16,7 @@ function Header() {
                     placeholder="Search pull requests..."
                     className="w-full bg-transparent text-sm text-primary placeholder:text-secondary outline-none"
                 />
-            </div>  
+            </div>
 
             {/* Right */}
             <div className="flex items-center gap-3">
