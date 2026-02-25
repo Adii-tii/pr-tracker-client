@@ -1,18 +1,16 @@
 import { Github, ShieldCheck, GitPullRequest } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useState } from "react";
 
 const serverEndpoint = import.meta.env.VITE_SERVER_ENDPOINT;
 
 export default function LoginPage() {
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
   const handleConnect = () => {
     try {
       setLoading(true);
       window.location.href = `${serverEndpoint}/api/auth/github`;
+      
     } catch (error) {
       console.log(error);
     } finally {
