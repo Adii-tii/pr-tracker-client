@@ -1,11 +1,6 @@
-import { useState } from "react";
 import LifecycleFilters from "../../../landingPageComponents/LifecycleFilters";
 
-function PRControls({ view, setView }) {
-  const [filter, setFilter] = useState("All");
-  const [search, setSearch] = useState("");
-  const [sort, setSort] =   useState("updated");
-
+function PRControls({ view, setView, filter, setFilter, search, setSearch, sort, setSort }) {
   return (
     <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between pt-6">
       <LifecycleFilters active={filter} onChange={setFilter} />
@@ -34,23 +29,21 @@ function PRControls({ view, setView }) {
         <div className="ml-2 flex rounded-md border border-divider overflow-hidden">
           <button
             onClick={() => setView("table")}
-            className={`px-3 py-1.5 text-sm ${
-              view === "table"
-                ? "bg-selected text-primary"
-                : "text-secondary hover:bg-hover"
-            }`}
+            className={`px-3 py-1.5 text-sm ${view === "table"
+              ? "bg-selected text-primary"
+              : "text-secondary hover:bg-hover"
+              }`}
           >
             Table
           </button>
           <button
-            onClick={() => setView("kanban")}
-            className={`px-3 py-1.5 text-sm ${
-              view === "kanban"
+            onClick={() => setView("insights")}
+            className={`px-3 py-1.5 text-sm ${view === "insights"
                 ? "bg-selected text-primary"
                 : "text-secondary hover:bg-hover"
-            }`}
+              }`}
           >
-            Kanban
+            Insights
           </button>
         </div>
       </div>
