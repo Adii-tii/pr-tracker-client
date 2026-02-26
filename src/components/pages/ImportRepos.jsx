@@ -2,11 +2,13 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Github } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useRepo } from "../../context/RepoContext";
 
 const serverEndpoint = import.meta.env.VITE_SERVER_ENDPOINT;
 
 export default function ImportReposPage() {
   const navigate = useNavigate();
+  const { refreshRepos } = useRepo();
 
   const [repos, setRepos] = useState([]);
   const [selected, setSelected] = useState([]);
@@ -58,6 +60,8 @@ export default function ImportReposPage() {
         { withCredentials: true }
       );
 
+      // Re-fetch all app data so the dashboard shows imported repos immediately
+      await refreshRepos();
       navigate("/dashboard");
     } catch (err) {
       console.error("Import failed", err);

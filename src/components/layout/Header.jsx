@@ -1,4 +1,4 @@
-import { Search, ChevronRight, GitPullRequest } from "lucide-react";
+import { Search, ChevronRight, GitPullRequest, Sparkles } from "lucide-react";
 import { useRepo } from "../../context/RepoContext";
 import { useLocation, Link } from "react-router-dom";
 
@@ -9,7 +9,7 @@ const ROUTE_LABELS = {
     "/activity": "Activity",
 };
 
-function Header() {
+function Header({ onToggleAi, aiOpen }) {
     const { activeRepository, activePr } = useRepo();
     const location = useLocation();
 
@@ -60,8 +60,21 @@ function Header() {
                 </div>
             </div>
 
-            {/* Right — placeholder to balance flex layout */}
-            <div className="flex-1 shrink-0" />
+            {/* Right — AI Toggle */}
+            <div className="flex-1 flex justify-end shrink-0">
+                <button
+                    onClick={onToggleAi}
+                    title="AI Assistant"
+                    className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
+                        aiOpen
+                            ? "bg-purple-500/15 text-purple-400"
+                            : "text-secondary hover:text-primary hover:bg-hover"
+                    }`}
+                >
+                    <Sparkles className="h-3.5 w-3.5" />
+                    <span className="hidden sm:inline">AI</span>
+                </button>
+            </div>
         </header>
     );
 }
