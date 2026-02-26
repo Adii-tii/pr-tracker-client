@@ -66,6 +66,18 @@ export function PullRequestsPage() {
     setPage(1);
   }, [activeRepository]);
 
+  /* ---------- Hourly background polling ---------- */
+  useEffect(() => {
+    if (!activeRepository?.owner || !activeRepository?.name) return;
+
+    const POLL_INTERVAL_MS = 60 * 60 * 1000; // 1 hour
+    const interval = setInterval(() => {
+      fetchPRs(true, page);
+    }, POLL_INTERVAL_MS);
+
+    return () => clearInterval(interval);
+  }, [activeRepository, page, fetchPRs]);
+
   /* ---------- FILTER & SORT (client-side within current page) ---------- */
   const deriveStatus = (pr) => {
     if (pr.merged_at) return "Merged";
@@ -116,8 +128,8 @@ export function PullRequestsPage() {
             key={opt}
             onClick={() => handlePerPageChange(opt)}
             className={`w-8 h-7 rounded-md transition-colors text-xs font-medium ${perPage === opt
-                ? "bg-selected text-primary"
-                : "hover:bg-hover text-secondary"
+              ? "bg-selected text-primary"
+              : "hover:bg-hover text-secondary"
               }`}
           >
             {opt}
