@@ -12,6 +12,7 @@ export default function ImportReposPage() {
   const [selected, setSelected] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  /* ---------- FETCH GITHUB REPOS ---------- */
   const getRepos = async () => {
     try {
       const res = await axios.get(
@@ -31,11 +32,12 @@ export default function ImportReposPage() {
     getRepos();
   }, []);
 
-  const toggle = (id) => {
+  /* ---------- SELECTION ---------- */
+  const toggle = (githubRepoId) => {
     setSelected((prev) =>
-      prev.includes(id)
-        ? prev.filter((x) => x !== id)
-        : [...prev, id]
+      prev.includes(githubRepoId)
+        ? prev.filter((x) => x !== githubRepoId)
+        : [...prev, githubRepoId]
     );
   };
 
@@ -47,13 +49,15 @@ export default function ImportReposPage() {
     }
   };
 
+  /* ---------- IMPORT ---------- */
   const handleImport = async () => {
     try {
       await axios.post(
-        `${serverEndpoint}/api/repos/import`,
+        `${serverEndpoint}/api/repositories/import`,
         { repoIds: selected },
         { withCredentials: true }
       );
+
       navigate("/dashboard");
     } catch (err) {
       console.error("Import failed", err);
@@ -72,6 +76,7 @@ export default function ImportReposPage() {
     <div className="min-h-screen bg-bg flex items-center justify-center px-6">
       <div className="w-full max-w-xl space-y-6">
 
+        {/* Header */}
         <div className="space-y-2 text-center">
           <div className="flex items-center justify-center gap-2 text-primary font-semibold">
             <Github className="h-5 w-5" />
@@ -82,8 +87,10 @@ export default function ImportReposPage() {
           </p>
         </div>
 
+        {/* Card */}
         <div className="rounded-2xl border border-divider bg-surface p-5 space-y-4">
 
+          {/* Select controls */}
           <div className="flex items-center justify-between">
             <button
               onClick={toggleAll}
@@ -99,6 +106,7 @@ export default function ImportReposPage() {
             </div>
           </div>
 
+          {/* Repo list */}
           <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
             {repos.map((repo) => (
               <RepoRow
@@ -110,6 +118,7 @@ export default function ImportReposPage() {
             ))}
           </div>
 
+          {/* Actions */}
           <div className="flex gap-3 pt-2">
             <button
               onClick={handleImport}
@@ -133,6 +142,8 @@ export default function ImportReposPage() {
   );
 }
 
+/* ---------- ROW ---------- */
+
 function RepoRow({ repo, checked, onToggle }) {
   return (
     <label className="flex items-center justify-between rounded-md px-3 py-2 hover:bg-hover cursor-pointer">
@@ -144,7 +155,9 @@ function RepoRow({ repo, checked, onToggle }) {
           className="accent-white"
         />
 
-        <span className="text-sm text-primary">{repo.name}</span>
+        <span className="text-sm text-primary truncate max-w-[220px]">
+          {repo.name}
+        </span>
 
         {repo.private && (
           <span className="text-xs text-secondary">private</span>
