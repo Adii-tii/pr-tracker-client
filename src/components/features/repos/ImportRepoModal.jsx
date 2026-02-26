@@ -80,11 +80,29 @@ export function ImportRepoModal({ open, onClose }) {
         setErrorMsg("");
 
         try {
-            await axios.post(
-                `${serverEndpoint}/api/repositories/import`,
-                { repoIds: selected },
-                { withCredentials: true }
+            // Track each selected repo — this saves the Repository doc to MongoDB
+            // and bulk-imports all PRs in one shot.
+            const reposToTrack = ghRepos.filter((r) =>
+                selected.includes(r.githubRepoId)
             );
+
+            const results = await Promise.allSettled(
+                reposToTrack.map((r) =>
+                    axios.post(
+                        `${serverEndpoint}/api/repos/track`,
+                        { owner: r.owner, name: r.name },
+                        { withCredentials: true }
+                    )
+                )
+            );
+
+            const failed = results.filter((r) => r.status === "rejected");
+            if (failed.length) {
+                console.warn("Some repos failed to import:", failed);
+                if (failed.length === reposToTrack.length) {
+                    throw new Error("All repo imports failed");
+                }
+            }
 
             setDone(true);
 
