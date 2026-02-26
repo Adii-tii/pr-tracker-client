@@ -1,32 +1,69 @@
-import { Bell, Search } from "lucide-react";
+import { Search, ChevronRight, GitPullRequest } from "lucide-react";
+import { useRepo } from "../../context/RepoContext";
+import { useLocation, Link } from "react-router-dom";
+
+const ROUTE_LABELS = {
+    "/dashboard": "Dashboard",
+    "/pull-requests": "Pull Requests",
+    "/repos": "Repositories",
+    "/activity": "Activity",
+};
 
 function Header() {
+    const { activeRepository, activePr } = useRepo();
+    const location = useLocation();
+
+    /* ── Breadcrumbs ── */
+    const crumbs = [];
+    if (activeRepository) crumbs.push({ label: activeRepository.name, url: "/dashboard" });
+
+    const path = location.pathname;
+    const routeKey = Object.keys(ROUTE_LABELS).find(
+        (k) => path.startsWith(k) && (k !== "/dashboard" || path === "/dashboard")
+    );
+    if (routeKey) crumbs.push({ label: ROUTE_LABELS[routeKey], url: routeKey });
+    if (path.startsWith("/pull-requests/") && activePr)
+        crumbs.push({ label: activePr.title || `PR #${activePr.number}`, url: path });
+
     return (
-        <header className="sticky top-0 z-50 flex h-14 w-full items-center justify-between border-b border-divider bg-bg-80 backdrop-blur px-4">
-            {/* Left */}
-            <div className="flex items-center gap-2 font-semibold tracking-tight">
-                <div className="h-5 w-5 rounded-sm bg-white" />
-                <span className="text-primary">Repo name</span>
+        <header className="sticky top-0 z-50 flex h-14 w-full items-center border-b border-divider bg-bg/80 backdrop-blur-md px-4 gap-4">
+
+            {/* Left — Breadcrumbs */}
+            <nav className="flex items-center gap-1 text-sm min-w-0 flex-1">
+                <GitPullRequest className="h-3.5 w-3.5 text-accent shrink-0 mr-1" />
+                {crumbs.map((crumb, idx) => {
+                    const isLast = idx === crumbs.length - 1;
+                    return (
+                        <div key={idx} className="flex items-center gap-1 min-w-0">
+                            <Link
+                                to={crumb.url}
+                                className={`truncate font-medium transition-colors ${isLast ? "text-primary" : "text-secondary hover:text-primary"
+                                    }`}
+                                title={crumb.label}
+                            >
+                                {crumb.label}
+                            </Link>
+                            {!isLast && <ChevronRight className="h-3 w-3 text-secondary/40 shrink-0" />}
+                        </div>
+                    );
+                })}
+            </nav>
+
+            {/* Center — Search */}
+            <div className="flex justify-center shrink-0">
+                <div className="flex items-center gap-2 rounded-lg border border-divider bg-surface px-3 py-1.5 w-64 focus-within:border-accent/50 transition-colors">
+                    <Search className="h-3.5 w-3.5 text-secondary shrink-0" />
+                    <input
+                        placeholder="Search…"
+                        className="w-full bg-transparent text-xs text-primary placeholder:text-secondary/60 outline-none"
+                    />
+                </div>
             </div>
 
-            {/* Center */}
-            <div className="hidden w-full max-w-md items-center gap-2 rounded-md border border-divider bg-surface px-3 py-1.5 md:flex">
-                <Search className="h-4 w-4 text-secondary" />
-                <input
-                    placeholder="Search pull requests..."
-                    className="w-full bg-transparent text-sm text-primary placeholder:text-secondary outline-none"
-                />
-            </div>
-
-            {/* Right */}
-            <div className="flex items-center gap-3">
-                <button className="rounded-md p-2 hover:bg-hover">
-                    <Bell className="h-4 w-4 text-secondary" />
-                </button>
-                <div className="h-7 w-7 rounded-full bg-surface-elev" />
-            </div>
+            {/* Right — placeholder to balance flex layout */}
+            <div className="flex-1 shrink-0" />
         </header>
     );
 }
 
-export default Header
+export default Header;
