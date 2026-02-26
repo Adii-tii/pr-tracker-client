@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router";
+import Tag from "../../../../ui/Tag";
 
 function PRKanban({ prs }) {
   const columns = ["Ready", "Review", "Blocked", "Stale"];
@@ -57,12 +58,9 @@ function PRCard({ pr }) {
 
       <div className="mt-2 flex flex-wrap gap-1">
         {pr.tags.map((t) => (
-          <span
-            key={t}
-            className="rounded bg-surface px-2 py-0.5 text-xs text-primary"
-          >
-            {t}
-          </span>
+          <Tag key={t.name} color={t.color}>
+            {t.name}
+          </Tag>
         ))}
       </div>
 

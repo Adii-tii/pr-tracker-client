@@ -1,59 +1,90 @@
 import Tag from "../../../../ui/Tag";
 import { useNavigate } from "react-router";
+
 function PRRow({ pr }) {
   const navigate = useNavigate();
 
   const variantMap = {
-    Ready: "open",
-    Blocked: "draft",
-    Review: "review",
-    Stale: "default",
+    Open: "open",
+    Draft: "draft",
+    Merged: "merged",
+    Closed: "default",
+  };
+
+  const handleClick = () => {
+    navigate(`/pull-requests/${pr.id}`, {
+      state: { owner: pr.owner, repoName: pr.repoName },
+    });
   };
 
   return (
     <tr
-      onClick={() => navigate(`/pull-requests/${pr.id}`)}
-      className="cursor-pointer border-t border-divider hover:bg-hover"
+      onClick={handleClick}
+      className="cursor-pointer border-t border-divider hover:bg-hover transition-colors group"
     >
-      <td className="px-4 py-3">
-        <div className="font-medium text-primary">{pr.title}</div>
-        <div className="text-xs text-secondary">#{pr.id}</div>
-      </td>
-
-      <td className="px-4 py-3 text-secondary">{pr.repo}</td>
-
-      <td className="px-4 py-3 text-xs text-secondary">
-        <span className="rounded bg-surface-elev px-1.5 py-0.5">
-          {pr.sourceBranch}
-        </span>
-        <span className="mx-1">→</span>
-        <span className="rounded bg-surface-elev px-1.5 py-0.5">
-          {pr.targetBranch}
-        </span>
-      </td>
-
-      <td className="px-4 py-3 text-secondary">{pr.author}</td>
-
-      <td className="px-4 py-3">
-        <Tag variant={variantMap[pr.status]}>
-          {pr.status}
-        </Tag>
-      </td>
-
-      <td className="px-4 py-3">
-        <div className="flex flex-wrap gap-1">
-          {pr.tags.map((t) => (
-            <span
-              key={t}
-              className="rounded bg-surface-elev px-2 py-0.5 text-xs text-primary"
-            >
-              {t}
-            </span>
-          ))}
+      {/* PR # + Title */}
+      <td className="px-4 h-14 align-middle">
+        <div className="flex items-center gap-2 min-w-0 max-w-xs">
+          <span className="text-sm font-medium text-primary truncate group-hover:text-accent transition-colors">
+            {pr.title}
+          </span>
         </div>
       </td>
 
-      <td className="px-4 py-3 text-secondary">{pr.updated}</td>
+      {/* Branch */}
+      <td className="px-4 h-14 align-middle">
+        <div className="flex items-center gap-1 text-xs text-secondary whitespace-nowrap">
+          <span className="rounded bg-surface-elev px-1 py-0.5 font-mono truncate max-w-[100px]">
+            {pr.sourceBranch}
+          </span>
+          <span className="shrink-0">→</span>
+          <span className="rounded bg-surface-elev px-1.5 py-0.5 font-mono truncate max-w-[50px]">
+            {pr.targetBranch}
+          </span>
+        </div>
+      </td>
+
+      {/* Author */}
+      <td className="px-4 h-14 align-middle">
+        <div className="flex items-center gap-1.5 min-w-0">
+          {pr.authorAvatar ? (
+            <img
+              src={pr.authorAvatar}
+              alt={pr.author}
+              className="h-5 w-5 rounded-full object-cover shrink-0"
+            />
+          ) : (
+            <div className="h-5 w-5 rounded-full bg-surface-elev shrink-0 flex items-center justify-center text-[10px] text-secondary">
+              {pr.author?.[0]?.toUpperCase() || "?"}
+            </div>
+          )}
+          <span className="text-xs text-secondary truncate max-w-[80px]">{pr.author}</span>
+        </div>
+      </td>
+
+      {/* Status */}
+      <td className="px-4 h-14 align-middle">
+        <Tag variant={variantMap[pr.status] || "default"}>{pr.status}</Tag>
+      </td>
+
+      {/* Labels — max 2 visible, +N overflow */}
+      <td className="px-4 h-14 align-middle">
+        <div className="flex items-center gap-1 flex-nowrap overflow-hidden">
+          {pr.tags.slice(0, 2).map((t) => (
+            <Tag key={t.name} color={t.color}>
+              {t.name}
+            </Tag>
+          ))}
+          {pr.tags.length > 2 && (
+            <span className="text-[10px] text-secondary shrink-0">+{pr.tags.length - 2}</span>
+          )}
+        </div>
+      </td>
+
+      {/* Updated */}
+      <td className="px-4 h-14 align-middle">
+        <span className="text-xs text-secondary whitespace-nowrap">{pr.updated}</span>
+      </td>
     </tr>
   );
 }
