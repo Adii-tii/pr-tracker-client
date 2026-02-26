@@ -7,6 +7,7 @@ import { RepositoriesPage } from "./components/pages/Repository";
 import PRDetails from "./components/pages/PRDetails";
 import LoginPage from "./components/pages/Login";
 import ImportReposPage from "./components/pages/ImportRepos";
+import AuthCallback from "./components/pages/AuthCallback";
 import axios from "axios";
 import { useState, useEffect, useCallback } from "react";
 import { timeAgo } from "./utils/timeAgo";
@@ -121,6 +122,7 @@ function AppContent() {
       {/* Public */}
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/auth/callback" element={<AuthCallback />} />
 
       {/* App shell */}
       <Route element={<AppLayout user={user} />}>

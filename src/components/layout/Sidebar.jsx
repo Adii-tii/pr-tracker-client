@@ -33,10 +33,11 @@ export function Sidebar({ user }) {
   const handleLogout = async () => {
     try {
       await axios.post(`${serverEndpoint}/api/auth/logout`, {}, { withCredentials: true });
-      window.location.href = "/login";
     } catch (err) {
       console.error("Logout failed", err);
     }
+    localStorage.removeItem("token");
+    window.location.href = "/login";
   };
 
   return (
