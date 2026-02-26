@@ -88,12 +88,7 @@ export function Sidebar({ user }) {
           collapsed={collapsed}
           path="/repos"
         />
-        <SidebarItem
-          icon={Activity}
-          label="Activity"
-          collapsed={collapsed}
-          path="/activity"
-        />
+        
       </nav>
 
       {/* ── Account footer ── */}
