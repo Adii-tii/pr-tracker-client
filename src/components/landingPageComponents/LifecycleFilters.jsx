@@ -1,6 +1,6 @@
 
 function LifecycleFilters({ active, onChange }) {
-    const filters = ["All", "Ready", "Blocked", "Review", "Stale"];
+    const filters = ["All", "Open", "Draft", "Merged", "Closed"];
 
     return (
         <div className="flex gap-1 rounded-lg bg-surface-elev p-1">
